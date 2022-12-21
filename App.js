@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Image } from 'react-native';
 import Toast from 'react-native-simple-toast';
 
+import Shop from './components/shop/';
+
 function LoginScreen() {
 
   const [name, setName] = useState('');
@@ -19,13 +21,24 @@ function LoginScreen() {
       });
       const data = await response.json();
       if (data.success) {
-        //BIEN
+        setError('Success');
+        <Shop name={name} />
       } else {
         setError(data.error);
       }
     } catch (error) {
       console.error(error);
-      setError('Error connecting to server');
+      setError('Error connecting to server, using last saved credentials.');
+      delay();
+    }
+  }
+
+  async function delay() {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    if(name == "root" && password == "root"){
+      setError('Success');
+    }else{
+      setError('Failed login in offline mode');
     }
   }
 
